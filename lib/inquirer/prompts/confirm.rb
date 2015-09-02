@@ -77,23 +77,25 @@ class Confirm
     IOHelper.render( update_prompt )
     # loop through user confirm
     # IOHelper.read_char
-    IOHelper.read_key_while true do |key|
-      raw  = IOHelper.char_to_raw(key)
+    IOHelper.without_cursor do
+      IOHelper.read_key_while true do |key|
+        raw  = IOHelper.char_to_raw(key)
 
-      case raw
-      when "y","Y"
-        @value = true
-        false
-      when "n","N"
-        @value = false
-        false
-      when "return"
-        @value = @default
-        false
-      else
-        true
+        case raw
+        when "y","Y"
+          @value = true
+          false
+        when "n","N"
+          @value = false
+          false
+        when "return"
+          @value = @default
+          false
+        else
+          true
+        end
+
       end
-
     end
 
     # clear the final prompt and the line
