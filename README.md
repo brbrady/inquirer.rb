@@ -97,6 +97,10 @@ Ask.input "What's your name", clear: false, response: false
 | Rubinius 2.5.x | ✔     | ✔    | ✘       |
 | JRuby 1.7.x    | ✘     | ✘    | ✘       |
 
+## Development
+
+Use `bin/console` for irb with inquirer.rb included
+
 ## Contributors
 
 **Thank you for contributing!**
