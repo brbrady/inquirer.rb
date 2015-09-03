@@ -44,6 +44,7 @@ class InputResponseDefault
 end
 
 class Input
+  include Ctrl
   def initialize question = nil, default = nil, renderer = nil, responseRenderer = nil
     @question = question
     @value = ""
@@ -99,6 +100,14 @@ class Input
           @pos = @pos - 1
           print IOHelper.char_right
         end
+      when /^ctrl-([aekuw])$/
+        ctrl $1.to_sym
+        IOHelper.rerender( update_prompt )
+        update_cursor
+      when /^alt-([bdf])$/
+        alt $1.to_sym
+        IOHelper.rerender( update_prompt )
+        update_cursor
       when "return"
         if not @default.nil? and @value == ""
           @value = @default
