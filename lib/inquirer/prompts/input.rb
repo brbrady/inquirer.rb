@@ -19,6 +19,16 @@ module InputRenderer
     # render the footer
     ( response.nil? ? "" : @response % response )
   end
+
+  def error message
+    # render the error
+    @error % message
+  end
+
+  def warning message
+    # render the warning
+    @warning % message
+  end
 end
 
 # Default formatting for list rendering
@@ -40,12 +50,15 @@ class InputResponseDefault
   def initialize( style = nil )
     @heading = "%s: "
     @response = C.cyan("%s") + "\n"
+    @error = C.red("%s") + "\n"
+    @warning = C.yellow("%s") + "\n"
   end
 end
 
 class Input
   include Ctrl
-  def initialize question = nil, default = nil, renderer = nil, responseRenderer = nil
+  def initialize question = nil, default = nil, renderer = nil, responseRenderer = nil, opts = {}
+
     @question = question
     @value = ""
     @default = default
@@ -53,6 +66,8 @@ class Input
     @pos = 0
     @renderer = renderer || InputDefault.new( Inquirer::Style::Default )
     @responseRenderer = responseRenderer = InputResponseDefault.new()
+    @validate = opts[:validate]
+    @invalid_response = opts[:invalid_response]
   end
 
   def update_prompt
@@ -64,8 +79,36 @@ class Input
     @prompt = @responseRenderer.renderResponse(@question, @value)
   end
 
+  def print_error message
+    IOHelper.clear
+    $stderr.print @responseRenderer.error message
+  end
+
+  def print_warning message
+    IOHelper.clear
+    $stderr.print @responseRenderer.warning message
+  end
+
   def update_cursor
     print IOHelper.char_left * @pos
+  end
+
+  def valid_response?
+    @validate.nil? or
+    (@validate.is_a? Regexp and @validate =~ @value) or
+    (@validate.is_a? Proc and @validate[@value])
+  end
+
+  def print_invalid_response
+    if @invalid_response
+      message = @invalid_response
+    elsif @validate.is_a? Regexp
+      message = "Invalid answer (must match #{@validate.inspect})" 
+    else
+      message = "Invalid answer."
+    end
+    print_warning message
+    IOHelper.render( update_prompt )
   end
 
   # Run the list selection, wait for the user to select an item and return
@@ -109,6 +152,10 @@ class Input
         IOHelper.rerender( update_prompt )
         update_cursor
       when "return"
+        unless valid_response?
+          print_invalid_response
+          raw = ""
+        end
         if not @default.nil? and @value == ""
           @value = @default
         end
@@ -132,7 +179,13 @@ class Input
   end
 
   def self.ask question = nil, opts = {}
-    l = Input.new question, opts[:default], opts[:renderer], opts[:rendererResponse]
+    l = Input.new(question,
+                  opts[:default],
+                  opts[:renderer],
+                  opts[:rendererResponse],
+                  validate: opts[:validate],
+                  invalid_response: opts[:invalid_response]
+                 )
     l.run opts.fetch(:clear, true), opts.fetch(:response, true)
   end
 
