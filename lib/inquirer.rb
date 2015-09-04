@@ -14,8 +14,8 @@ module Ask
   def checkbox *args
     Checkbox.ask *args
   end
-  def input *args
-    Input.ask *args
+  def input *args, **kwargs
+    Input.ask *args, **kwargs
   end
   def confirm *args
     Confirm.ask *args

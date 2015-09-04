@@ -93,6 +93,11 @@ module IOHelper
     render prompt
   end
 
+  def error message
+    clear
+    puts message
+  end
+
   # clear the console based on the last text rendered
   def clear
     # get console window height and width
