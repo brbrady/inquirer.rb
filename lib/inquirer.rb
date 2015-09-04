@@ -1,5 +1,6 @@
 require 'inquirer/version'
 require 'inquirer/utils/iohelper'
+require 'inquirer/utils/ctrl'
 require 'inquirer/prompts/list'
 require 'inquirer/prompts/checkbox'
 require 'inquirer/prompts/input'
