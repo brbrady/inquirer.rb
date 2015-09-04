@@ -46,6 +46,15 @@ phone = Ask.input "What's your phone number", default: "123"
 
 ![Input example](example/input.png)
 
+### Password
+
+```ruby
+password = Ask.password "What's your password"
+# password will be the response to the question
+```
+
+![Input example](example/password.png)
+
 ### Confirm
 
 Takes optional `default` property (`true` or `false`). The default `default` value is true.
