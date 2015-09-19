@@ -10,3 +10,9 @@ idx = Ask.checkbox "Monkey see, monkey...", [
   "do"
 ]
 puts "you selected #{idx}"
+values = Ask.checkbox "Monkey see, monkey...", [
+  "don't",
+  "eats Banana",
+  "do"
+], values: true
+puts "you selected #{values}"
