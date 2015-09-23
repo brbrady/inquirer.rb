@@ -6,6 +6,7 @@ require 'inquirer/prompts/checkbox'
 require 'inquirer/prompts/input'
 require 'inquirer/prompts/confirm'
 require 'inquirer/prompts/password'
+require 'inquirer/prompts/choice'
 
 module Ask
   extend self
@@ -24,5 +25,8 @@ module Ask
   end
   def password *args
     Password.ask *args
+  end
+  def choice *args
+    Choice.ask *args
   end
 end
