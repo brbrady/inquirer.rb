@@ -33,10 +33,15 @@ describe Checkbox do
       ).must_equal [false,false,false]
   end
 
-    it "it finishes selection on pressing enter with defaults" do
+  it "it finishes selection on pressing enter with defaults" do
     IOHelper.keys = "enter"
     Checkbox.ask( "select", ["one","two","three"], default: [true, false, true], clear: false, response: false
       ).must_equal [true,false,true]
+  end
+
+  it "it returns the select values as strings with values option set to true" do
+    Checkbox.ask( "select", ["one","two","three"], default: [true, false, true], clear: false, response: false, values: true
+      ).must_equal ['one', 'three']
   end
 
   it "selects and renders other items correctly (press down, press up, space, cycle)" do

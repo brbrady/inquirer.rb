@@ -98,7 +98,9 @@ class Checkbox
   # +response+:: +Bool+ whether show the rendered response when this is done
   #   defaults to true; set it to false if you want the prompt to remain after
   #   the user is done with selecting
-  def run clear, response
+  # +values+:: +Bool+ whether to return selected values as strings or as bools
+  #   defaults to false; set it to true if you want to return strings
+  def run clear, response, values
     # finish if there's nothing to do
     return @active if Array(@elements).empty?
 
@@ -124,12 +126,19 @@ class Checkbox
     IOHelper.render( update_response ) if response
 
     # return the index of the selected item
+    if values
+      items = []
+      @active.each_with_index {|selected, index|
+        items << @elements[index] if selected
+      }
+      return items
+    end
     @active
   end
 
   def self.ask question = nil, elements = [], opts = {}
     l = Checkbox.new question, elements, opts[:default], opts[:renderer], opts[:rendererResponse]
-    l.run opts.fetch(:clear, true), opts.fetch(:response, true)
+    l.run opts.fetch(:clear, true), opts.fetch(:response, true), opts.fetch(:values, false)
   end
 
 end
