@@ -1,23 +1,15 @@
 require 'inquirer/version'
 require 'inquirer/utils/iohelper'
-require 'inquirer/prompts/list'
-require 'inquirer/prompts/checkbox'
-require 'inquirer/prompts/input'
-require 'inquirer/prompts/confirm'
+Dir["#{File.dirname(__FILE__)}/inquirer/prompts/**/*.rb"].each { |f| require f }
 
 module Ask
   extend self
   # implement prompts
-  def list *args
-    List.ask *args
+  [List, Checkbox, Input, Confirm].each do |klass|
+    method = klass.name.downcase
+    define_method(method) do |*args|
+      klass.ask *args
+    end
   end
-  def checkbox *args
-    Checkbox.ask *args
-  end
-  def input *args
-    Input.ask *args
-  end
-  def confirm *args
-    Confirm.ask *args
-  end
+
 end
