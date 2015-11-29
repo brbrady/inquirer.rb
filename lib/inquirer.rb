@@ -5,11 +5,9 @@ Dir["#{File.dirname(__FILE__)}/inquirer/prompts/**/*.rb"].each { |f| require f }
 module Ask
   extend self
   # implement prompts
-  [List, Checkbox, Input, Confirm].each do |klass|
-    method = klass.name.downcase
+  %i[list checkbox input confirm].each do |method|
     define_method(method) do |*args|
-      klass.ask *args
+      self.const_get(method.capitalize).ask(*args)
     end
   end
-
 end
