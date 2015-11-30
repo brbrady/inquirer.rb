@@ -56,12 +56,12 @@ class InputResponseDefault
 end
 
 class Input
-  def initialize question = nil, default = nil, renderer = nil, responseRenderer = nil, opts = {}
-
+  def initialize question = nil, default = nil, renderer = nil, responseRenderer = nil, password = false, opts = {}
     @question = question
     @value = ""
     @default = default
     @prompt = ""
+    @password = password
     @pos = 0
     @renderer = renderer || InputDefault.new( Inquirer::Style::Default )
     @responseRenderer = responseRenderer = InputResponseDefault.new()
@@ -69,13 +69,18 @@ class Input
     @invalid_response = opts[:invalid_response]
   end
 
+  def display_value
+    return @value unless @password
+    @value.tr("^\n", '*')
+  end
+
   def update_prompt
     # call the renderer
-    @prompt = @renderer.render(@question, @value, @default)
+    @prompt = @renderer.render(@question, display_value, @default)
   end
 
   def update_response
-    @prompt = @responseRenderer.renderResponse(@question, @value)
+    @prompt = @responseRenderer.renderResponse(@question, display_value)
   end
 
   def print_error message
@@ -174,6 +179,7 @@ class Input
                   opts[:default],
                   opts[:renderer],
                   opts[:rendererResponse],
+                  opts[:password],
                   validate: opts[:validate],
                   invalid_response: opts[:invalid_response]
                  )

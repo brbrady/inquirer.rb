@@ -37,4 +37,9 @@ describe Input do
     end
     assert_equal "#{Term::ANSIColor.yellow("Response failed validation Proc")}\n", err
   end
+
+  it "should provide a password input without displaying the value" do
+    Input.ask("please type password", password: true)
+    IOHelper.output.must_equal "please type password: \e[36m***********\e[0m\n"
+  end
 end
