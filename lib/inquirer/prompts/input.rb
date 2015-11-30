@@ -44,7 +44,12 @@ class InputResponseDefault
 end
 
 class Input
-  def initialize question = nil, default = nil, renderer = nil, responseRenderer = nil, password = false
+  def initialize(question = nil,
+                 default: nil,
+                 renderer: nil,
+                 responseRenderer: nil,
+                 password: false,
+                 **opts)
     @question = question
     @value = ""
     @default = default
@@ -128,8 +133,8 @@ class Input
     @value
   end
 
-  def self.ask question = nil, opts = {}
-    l = Input.new question, opts[:default], opts[:renderer], opts[:rendererResponse], opts[:password]
+  def self.ask question = nil, **opts
+    l = Input.new question, **opts
     l.run opts.fetch(:clear, true), opts.fetch(:response, true)
   end
 

@@ -58,7 +58,12 @@ class CheckboxResponseDefault
 end
 
 class Checkbox
-  def initialize question = nil, elements = [], default = nil, renderer = nil, responseRenderer = nil
+  def initialize(question = nil,
+                 elements = [],
+                 default: nil,
+                 renderer: nil,
+                 responseRenderer: nil,
+                 **opts)
     @elements = elements
     @question = question
     @pos = 0
@@ -127,8 +132,8 @@ class Checkbox
     @active
   end
 
-  def self.ask question = nil, elements = [], opts = {}
-    l = Checkbox.new question, elements, opts[:default], opts[:renderer], opts[:rendererResponse]
+  def self.ask question = nil, elements = [], **opts
+    l = Checkbox.new question, elements, **opts
     l.run opts.fetch(:clear, true), opts.fetch(:response, true)
   end
 

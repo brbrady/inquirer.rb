@@ -45,7 +45,11 @@ class ConfirmResponseDefault
 end
 
 class Confirm
-  def initialize question = nil, default = nil, renderer = nil, responseRenderer = nil
+  def initialize(question = nil,
+                 default = nil,
+                 renderer: nil,
+                 responseRenderer: nil,
+                 **opts)
     @question = question
     @value = ""
     @default = default
@@ -106,8 +110,8 @@ class Confirm
     @value
   end
 
-  def self.ask question = nil, opts = {}
-    l = Confirm.new question, opts.fetch(:default, true), opts[:renderer], opts[:rendererResponse]
+  def self.ask question = nil, **opts
+    l = Confirm.new question, opts.fetch(:default, true), **opts
     l.run opts.fetch(:clear, true), opts.fetch(:response, true)
   end
 
