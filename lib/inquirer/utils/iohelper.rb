@@ -16,10 +16,26 @@ module IOHelper
     "\e[C" => "right",
     "\e[D" => "left",
     "\177" => "backspace",
-    # ctrl + c
+    # ctrl + c    cancel
     "\003" => "ctrl-c",
-    # ctrl + d
-    "\004" => "ctrl-d"
+    # ctrl + d    exit
+    "\004" => "ctrl-d",
+    # ctrl + w    delete word before cursor
+    "\u0017" => "ctrl-w",
+    # alt  + d    delete word after cursor
+    "\ed" => "alt-d",
+    # alt  + b    jump to beginning of word
+    "\eb" => "alt-b",
+    # alt  + f    jump to end of word
+    "\ef" => "alt-f",
+    # ctrl + a    jump to beginning of line
+    "\u0001" => "ctrl-a",
+    # ctrl + e    jump to end of line
+    "\u0005" => "ctrl-e",
+    # ctrl + u    delete to beginning of line
+    "\u0015" => "ctrl-u",
+    # ctrl + k    delete to end of line
+    "\v" => "ctrl-k"
   }
 
   # Read a character the user enters on console. This call is synchronous blocking.
