@@ -21,9 +21,25 @@ describe Input do
     Confirm.ask("Are you sure?", default: "I'm default").must_equal "I'm default"
   end
 
+  it "should print out a warning if argument validation fails" do
+    out, err = capture_io do
+      Input.ask("please type input", validate: /valid/)
+    end
+    assert_equal "#{Term::ANSIColor.yellow("Invalid answer (must match /valid/)")}\n", err
+  end
+
+  it "accepts an override to the validation failure message" do
+    out, err = capture_io do
+      Input.ask("please type input",
+                validate: proc do false end,
+                invalid_response: "Response failed validation Proc"
+               )
+    end
+    assert_equal "#{Term::ANSIColor.yellow("Response failed validation Proc")}\n", err
+  end
+
   it "should provide a password input without displaying the value" do
     Input.ask("please type password", password: true)
     IOHelper.output.must_equal "please type password: \e[36m***********\e[0m\n"
   end
-
 end
