@@ -1,13 +1,13 @@
 # encoding: utf-8
 require 'minitest_helper'
 
-describe Confirm do
+describe Ask::Prompts::Confirm do
   before :each do
     IOHelper.output = ""
   end
 
   [
-    Confirm.method(:ask),
+    Ask::Prompts::Confirm.method(:ask),
     Ask.method(:confirm)
   ].each do |meth|
 
