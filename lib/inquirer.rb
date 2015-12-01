@@ -1,28 +1,19 @@
 require 'inquirer/version'
 require 'inquirer/utils/iohelper'
 require 'inquirer/utils/ctrl'
-require 'inquirer/prompts/list'
-require 'inquirer/prompts/checkbox'
-require 'inquirer/prompts/input'
-require 'inquirer/prompts/confirm'
-require 'inquirer/prompts/choice'
 
 module Ask
   extend self
+  module Prompts
+    PROMPTS = []
+  end
+  # require prompts after defining Prompts module,
+  # so prompts can append their names to Prompts::PROMPTS
+  Dir["#{File.dirname(__FILE__)}/inquirer/prompts/*.rb"].each{|f| require f}
   # implement prompts
-  def list *args, **kwargs
-    List.ask *args, **kwargs
-  end
-  def checkbox *args, **kwargs
-    Checkbox.ask *args, **kwargs
-  end
-  def input *args, **kwargs
-    Input.ask *args, **kwargs
-  end
-  def confirm *args, **kwargs
-    Confirm.ask *args, **kwargs
-  end
-  def choice *args, **kwargs
-    Choice.ask *args, **kwargs
+  Prompts::PROMPTS.each do |prompt|
+    define_method(prompt) do |*args|
+      Prompts.const_get(prompt.capitalize).ask(*args)
+    end
   end
 end
