@@ -58,7 +58,13 @@ class CheckboxResponseDefault
 end
 
 class Checkbox
-  def initialize question = nil, elements = [], default = nil, renderer = nil, responseRenderer = nil
+  def initialize(question = nil,
+                 elements = [],
+                 default: nil,
+                 renderer: nil,
+                 responseRenderer: nil,
+                 values: false,
+                 **opts)
     @elements = elements
     @question = question
     @pos = 0
@@ -66,6 +72,7 @@ class Checkbox
     @prompt = ""
     @renderer = renderer || CheckboxDefault.new( Inquirer::Style::Default )
     @responseRenderer = responseRenderer = CheckboxResponseDefault.new()
+    @return_values = values
   end
 
   def update_prompt
@@ -100,7 +107,7 @@ class Checkbox
   #   the user is done with selecting
   # +values+:: +Bool+ whether to return selected values as strings or as bools
   #   defaults to false; set it to true if you want to return strings
-  def run clear, response, values
+  def run clear, response
     # finish if there's nothing to do
     return @active if Array(@elements).empty?
 
@@ -126,7 +133,7 @@ class Checkbox
     IOHelper.render( update_response ) if response
 
     # return the index of the selected item
-    if values
+    if @return_values
       items = []
       @active.each_with_index {|selected, index|
         items << @elements[index] if selected
@@ -136,9 +143,9 @@ class Checkbox
     @active
   end
 
-  def self.ask question = nil, elements = [], opts = {}
-    l = Checkbox.new question, elements, opts[:default], opts[:renderer], opts[:rendererResponse]
-    l.run opts.fetch(:clear, true), opts.fetch(:response, true), opts.fetch(:values, false)
+  def self.ask question = nil, elements = [], **opts
+    l = Checkbox.new question, elements, **opts
+    l.run opts.fetch(:clear, true), opts.fetch(:response, true)
   end
 
 end

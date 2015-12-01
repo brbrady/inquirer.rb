@@ -10,19 +10,19 @@ require 'inquirer/prompts/choice'
 module Ask
   extend self
   # implement prompts
-  def list *args
-    List.ask *args
+  def list *args, **kwargs
+    List.ask *args, **kwargs
   end
-  def checkbox *args
-    Checkbox.ask *args
+  def checkbox *args, **kwargs
+    Checkbox.ask *args, **kwargs
   end
   def input *args, **kwargs
     Input.ask *args, **kwargs
   end
-  def confirm *args
-    Confirm.ask *args
+  def confirm *args, **kwargs
+    Confirm.ask *args, **kwargs
   end
-  def choice *args
-    Choice.ask *args
+  def choice *args, **kwargs
+    Choice.ask *args, **kwargs
   end
 end

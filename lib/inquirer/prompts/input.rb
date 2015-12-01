@@ -57,7 +57,12 @@ end
 
 class Input
   include Ctrl
-  def initialize question = nil, default = nil, renderer = nil, responseRenderer = nil, password = false, opts = {}
+  def initialize(question = nil,
+                 default: nil,
+                 renderer: nil,
+                 responseRenderer: nil,
+                 password: false,
+                 **opts)
     @question = question
     @value = ""
     @default = default
@@ -183,15 +188,8 @@ class Input
     @value
   end
 
-  def self.ask question = nil, opts = {}
-    l = Input.new(question,
-                  opts[:default],
-                  opts[:renderer],
-                  opts[:rendererResponse],
-                  opts[:password],
-                  validate: opts[:validate],
-                  invalid_response: opts[:invalid_response]
-                 )
+  def self.ask question = nil, **opts
+    l = Input.new question, **opts
     l.run opts.fetch(:clear, true), opts.fetch(:response, true)
   end
 

@@ -52,7 +52,11 @@ class ListResponseDefault
 end
 
 class List
-  def initialize question = nil, elements = [], renderer = nil, responseRenderer = nil
+  def initialize(question = nil,
+                 elements = [],
+                 renderer: nil,
+                 responseRenderer: nil,
+                 **opts)
     @elements = elements
     @question = question
     @pos = 0
@@ -115,8 +119,8 @@ class List
     @pos
   end
 
-  def self.ask question = nil, elements = [], opts = {}
-    l = List.new question, elements, opts[:renderer], opts[:rendererResponse]
+  def self.ask question = nil, elements = [], **opts
+    l = List.new question, elements, **opts
     l.run opts.fetch(:clear, true), opts.fetch(:response, true)
   end
 

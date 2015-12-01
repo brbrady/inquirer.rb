@@ -15,11 +15,11 @@ describe Choice do
 
   it 'should return the default if there is a default and enter is pressed' do
     IOHelper.keys = "\r"
-    Choice.ask('?', ['a','b', 'c'], 'c').must_equal 'c'
+    Choice.ask('?', ['a','b', 'c'], default: 'c').must_equal 'c'
     IOHelper.output.must_equal "?: #{Term::ANSIColor.cyan('c')}\n"
 
     IOHelper.keys = "\r"
-    Choice.ask('?', ['foo', 'bar', 'qux'], 'bar')
+    Choice.ask('?', ['foo', 'bar', 'qux'], default: 'bar')
     IOHelper.output.must_equal "?: #{Term::ANSIColor.cyan('bar')}\n"
   end
 
@@ -63,19 +63,19 @@ describe Choice do
 
     it 'should capitalize the selection character of the default option' do
       IOHelper.keys = ''
-      Choice.ask('?', ['a', 'b', 'c'], 'a')
+      Choice.ask('?', ['a', 'b', 'c'], default: 'a')
       IOHelper.output.must_equal "?: ([A], [b], [c])?: #{Term::ANSIColor.cyan('')}\n"
 
       IOHelper.output = ''
-      Choice.ask('?', ['foo', 'bar', 'qux'], 'bar')
+      Choice.ask('?', ['foo', 'bar', 'qux'], default: 'bar')
       IOHelper.output.must_equal "?: ([f]oo, [B]ar, [q]ux)?: #{Term::ANSIColor.cyan('')}\n"
 
       IOHelper.output = ''
-      Choice.ask('?', ['foo', 'bar', 'baz'], 'baz')
+      Choice.ask('?', ['foo', 'bar', 'baz'], default: 'baz')
       IOHelper.output.must_equal "?: ([f]oo, [b]ar, b[A]z)?: #{Term::ANSIColor.cyan('')}\n"
 
       IOHelper.output = ''
-      Choice.ask('?', ['foo', 'bar', 'qux'], 'bar')
+      Choice.ask('?', ['foo', 'bar', 'qux'], default: 'bar')
       IOHelper.output.must_equal "?: ([f]oo, [B]ar, [q]ux)?: #{Term::ANSIColor.cyan('')}\n"
     end
 
@@ -107,14 +107,14 @@ describe Choice do
 
       IOHelper.output = ''
       IOHelper.keys = "\r"
-      Choice.ask('?', ['[f]oo', 'b[A]r', '[B]az'], 'foo').must_equal 'foo'
+      Choice.ask('?', ['[f]oo', 'b[A]r', '[B]az'], default: 'foo').must_equal 'foo'
       IOHelper.output.must_equal "?: ([F]oo, b[A]r, [B]az)?: #{Term::ANSIColor.cyan('foo')}\n"
     end
 
     it 'will not set a default if default is explicitly specified as false' do
       IOHelper.keys = "\r"
       out, err = capture_io do
-        Choice.ask('?', ['a', 'b', 'c'], false)
+        Choice.ask('?', ['a', 'b', 'c'], default: false)
       end
       err.must_equal Term::ANSIColor.yellow("No default value, please make a selection.") + "\n"
     end

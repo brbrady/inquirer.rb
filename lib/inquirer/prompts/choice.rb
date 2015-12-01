@@ -57,7 +57,11 @@ class ChoiceResponseDefault
 end
 
 class Choice
-  def initialize question = nil, choices = nil, default = nil, renderer = nil, responseRenderer = nil
+  def initialize(question = nil,
+                 choices = nil,
+                 default: nil,
+                 renderer: nil,
+                 responseRenderer: nil)
     @question = question
     @default = default
     @value = ""
@@ -163,8 +167,8 @@ class Choice
     @value
   end
 
-  def self.ask question = nil, options = nil, default = nil, opts = {}
-    l = Choice.new question, options, default, opts[:renderer], opts[:rendererResponse]
+  def self.ask question = nil, choices = nil, **opts
+    l = Choice.new question, choices, **opts
     l.run opts.fetch(:clear, true), opts.fetch(:response, true)
   end
 end
