@@ -1,6 +1,6 @@
 require 'term/ansicolor'
 
-module Ask::Prompts
+module Inquirer::Prompts
   PROMPTS << :choice
 
   # Base rendering for confirm

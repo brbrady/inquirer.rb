@@ -1,13 +1,13 @@
 # encoding: utf-8
 require 'minitest_helper'
 
-describe Ask::Prompts::Choice do
+describe Inquirer::Prompts::Choice do
   before :each do
     IOHelper.output = ''
   end
 
   [
-    Ask::Prompts::Choice.method(:ask),
+    Inquirer::Prompts::Choice.method(:ask),
     Ask.method(:choice)
   ].each do |meth|
 
