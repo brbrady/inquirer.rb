@@ -1,14 +1,14 @@
 # encoding: utf-8
 require 'minitest_helper'
 
-describe Ask::Prompts::Input do
+describe Inquirer::Prompts::Input do
   before :each do
     IOHelper.output = ""
     IOHelper.keys = ['t','y','p','e','d',' ','i','n','p','u','t',"\r"]
   end
 
   [
-    Ask::Prompts::Input.method(:ask),
+    Inquirer::Prompts::Input.method(:ask),
     Ask.method(:input)
   ].each do |meth|
 

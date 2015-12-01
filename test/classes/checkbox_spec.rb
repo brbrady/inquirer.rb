@@ -1,14 +1,14 @@
 # encoding: utf-8
 require 'minitest_helper'
 
-describe Ask::Prompts::Checkbox do
+describe Inquirer::Prompts::Checkbox do
   before :each do
     IOHelper.output = ""
     IOHelper.keys = nil
   end
 
   [
-    Ask::Prompts::Checkbox.method(:ask),
+    Inquirer::Prompts::Checkbox.method(:ask),
     Ask.method(:checkbox)
   ].each do |meth|
 

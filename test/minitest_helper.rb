@@ -22,7 +22,7 @@ end
 
 # overload all necessary methods of iohelper
 # this will serve as a mock helper to read input and output
-module Ask::IOHelper
+module Inquirer::IOHelper
   extend self
   attr_accessor :output, :keys
   def render sth
@@ -40,4 +40,4 @@ module Ask::IOHelper
     end
   end
 end
-IOHelper = Ask::IOHelper
+IOHelper = Inquirer::IOHelper

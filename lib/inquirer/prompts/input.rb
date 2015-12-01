@@ -1,6 +1,6 @@
 require 'term/ansicolor'
 
-module Ask::Prompts
+module Inquirer::Prompts
   PROMPTS << :input
 
   # Base rendering for input
