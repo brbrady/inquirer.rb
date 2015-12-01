@@ -81,12 +81,12 @@ module Inquirer::Prompts
     #   the user is done with selecting
     def run clear, response
       # render the
-      IOHelper.render( update_prompt )
+      Inquirer::IOHelper.render( update_prompt )
       # loop through user confirm
-      # IOHelper.read_char
-      IOHelper.without_cursor do
-        IOHelper.read_key_while true do |key|
-          raw  = IOHelper.char_to_raw(key)
+      # Inquirer::IOHelper.read_char
+      Inquirer::IOHelper.without_cursor do
+        Inquirer::IOHelper.read_key_while true do |key|
+          raw  = Inquirer::IOHelper.char_to_raw(key)
 
           case raw
           when "y","Y"
@@ -106,10 +106,10 @@ module Inquirer::Prompts
       end
 
       # clear the final prompt and the line
-      IOHelper.clear if clear
+      Inquirer::IOHelper.clear if clear
 
       # show the answer
-      IOHelper.render( update_response ) if response
+      Inquirer::IOHelper.render( update_response ) if response
 
       # return the value
       @value

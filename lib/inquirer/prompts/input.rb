@@ -93,16 +93,16 @@ module Inquirer::Prompts
     end
 
     def update_cursor
-      print IOHelper.char_left * @pos
+      print Inquirer::IOHelper.char_left * @pos
     end
 
     def print_error message
-      IOHelper.clear
+      Inquirer::IOHelper.clear
       $stderr.print @responseRenderer.error message
     end
 
     def print_warning message
-      IOHelper.clear
+      Inquirer::IOHelper.clear
       $stderr.print @responseRenderer.warning message
     end
 
@@ -121,7 +121,7 @@ module Inquirer::Prompts
         message = "Invalid answer."
       end
       print_warning message
-      IOHelper.render( update_prompt )
+      Inquirer::IOHelper.render( update_prompt )
     end
 
     # Run the list selection, wait for the user to select an item and return
@@ -135,34 +135,34 @@ module Inquirer::Prompts
     #   the user is done with selecting
     def run clear, response
       # render the
-      IOHelper.render( update_prompt )
+      Inquirer::IOHelper.render( update_prompt )
       # loop through user input
-      # IOHelper.read_char
-      IOHelper.read_key_while true do |key|
-        raw  = IOHelper.char_to_raw(key)
+      # Inquirer::IOHelper.read_char
+      Inquirer::IOHelper.read_key_while true do |key|
+        raw  = Inquirer::IOHelper.char_to_raw(key)
 
         case raw
         when "backspace"
           @value = @value.chop
-          IOHelper.rerender( update_prompt )
+          Inquirer::IOHelper.rerender( update_prompt )
           update_cursor
         when "left"
           if @pos < @value.length
             @pos = @pos + 1
-            print IOHelper.char_left
+            print Inquirer::IOHelper.char_left
           end
         when "right"
           if @pos > 0
             @pos = @pos - 1
-            print IOHelper.char_right
+            print Inquirer::IOHelper.char_right
           end
         when /^ctrl-([aekuw])$/
           ctrl $1.to_sym
-          IOHelper.rerender( update_prompt )
+          Inquirer::IOHelper.rerender( update_prompt )
           update_cursor
         when /^alt-([bdf])$/
           alt $1.to_sym
-          IOHelper.rerender( update_prompt )
+          Inquirer::IOHelper.rerender( update_prompt )
           update_cursor
         when "return"
           unless valid_response?
@@ -175,17 +175,17 @@ module Inquirer::Prompts
         else
           unless ["up", "down"].include?(raw)
             @value = @value.insert(@value.length - @pos, key)
-            IOHelper.rerender( update_prompt )
+            Inquirer::IOHelper.rerender( update_prompt )
             update_cursor
           end
         end
         raw != "return"
       end
       # clear the final prompt and the line
-      IOHelper.clear if clear
+      Inquirer::IOHelper.clear if clear
 
       # show the answer
-      IOHelper.render( update_response ) if response
+      Inquirer::IOHelper.render( update_response ) if response
 
       # return the value
       @value

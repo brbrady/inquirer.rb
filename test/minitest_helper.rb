@@ -40,4 +40,3 @@ module Inquirer::IOHelper
     end
   end
 end
-IOHelper = Inquirer::IOHelper
