@@ -1,7 +1,7 @@
 require 'term/ansicolor'
 require 'inquirer/style'
 
-module Ask::Prompts
+module Inquirer::Prompts
   PROMPTS << :checkbox
 
   # Base rendering for simple lists
