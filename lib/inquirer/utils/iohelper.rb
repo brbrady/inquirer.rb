@@ -86,7 +86,7 @@ module Inquirer::IOHelper
     STDIN.noecho do
       # as long as the block doen't return falsy,
       # read the user input key and sned it to the block
-      while block.( IOHelper.read_key true, return_char )
+      while block.( Inquirer::IOHelper.read_key true, return_char )
       end
     end
   end
@@ -117,7 +117,7 @@ module Inquirer::IOHelper
   # clear the console based on the last text rendered
   def clear
     # get console window height and width
-    h,w = IOHelper.winsize
+    h,w = Inquirer::IOHelper.winsize
     # determine how many lines to move up
     n = @rendered.scan(/\n/).length
     # jump back to the first position and clear the line
