@@ -22,8 +22,10 @@ describe Inquirer::Prompts::Input do
     end
 
     it "should provide a password input without displaying the value" do
+      Inquirer::IOHelper.keys = ['t','y','p','e','d',' ','i','n','p','u','t',"\r"]
       meth.call("please type password", password: true)
-      Inquirer::IOHelper.output.must_equal "please type password: \e[36m***********\e[0m\n"
+      Inquirer::IOHelper.frames[-2].must_equal "please type password: ***********"
+      Inquirer::IOHelper.output.must_equal "please type password: \e[36m\e[0m\n"
     end
   end
 end

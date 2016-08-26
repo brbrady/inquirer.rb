@@ -89,7 +89,7 @@ module Inquirer::Prompts
     end
 
     def update_response
-      @prompt = @responseRenderer.renderResponse(@question, display_value)
+      @prompt = @responseRenderer.renderResponse(@question, @password ? '' : display_value)
     end
 
     def update_cursor

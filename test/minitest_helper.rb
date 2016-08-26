@@ -24,15 +24,20 @@ end
 # this will serve as a mock helper to read input and output
 module Inquirer::IOHelper
   extend self
-  attr_accessor :output, :keys
+  attr_accessor :output, :keys, :frames
   def render sth
     @output += sth
+    update_frames
   end
   def clear
     @output = ""
   end
   def rerender sth
     @output = sth
+    update_frames
+  end
+  def update_frames
+    (@frames ||= []) << @output
   end
   def read_key_while return_char = false, &block
     Array(@keys).each do |key|
