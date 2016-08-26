@@ -31,9 +31,9 @@ module Inquirer::Prompts
 
     private
     def render_item choice, key, default
-      (choice == default)?
+      (default and choice.downcase == default.downcase)?
         choice.clone.sub(key, "[#{key.upcase}]") :
-        choice.clone.sub(key, "[#{key}]")
+        choice.clone.sub(key, "[#{key.downcase}]")
     end
   end
 
@@ -71,7 +71,7 @@ module Inquirer::Prompts
       @prompt = ""
       @renderer = renderer || ChoiceDefault.new( Inquirer::Style::Default )
       @responseRenderer = responseRenderer = ChoiceResponseDefault.new()
-      parse_choices(choices, default)
+      parse_choices(choices)
     end
 
     def update_prompt
@@ -90,11 +90,10 @@ module Inquirer::Prompts
       $stderr.print @responseRenderer.warning message
     end
 
-    def parse_choices(choices, default = nil)
+    def parse_choices(choices)
       @choices = {}
       rx = /^\w*\[(\w)\]\w*$/
       excludes = choices.map{|k,| k =~ rx; [$1, k]}.compact.to_h
-      #uniq! returns nil if array is already unique
       if @default.nil?
         overrides = choices.map{|k,|
           k.gsub(/\[(\w)\]/, '\1') if k =~ rx and $1 =~ /[A-Z]/
@@ -140,7 +139,9 @@ module Inquirer::Prompts
           when /^[a-z]$/
             if @choices.include? raw
               @value, @final = @choices[raw]
-
+              false
+            elsif @choices.include? raw.upcase
+              @value, @final = @choices[raw.upcase]
               false
             else
               print_warning "#{raw} is not in #{@choices.keys.join(', ')}"

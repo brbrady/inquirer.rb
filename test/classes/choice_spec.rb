@@ -18,6 +18,13 @@ describe Inquirer::Prompts::Choice do
       meth.call('?', {'a' => nil,'b' => nil}).must_equal 'b'
     end
 
+    it "shouldn't be case sensitive" do
+      Inquirer::IOHelper.keys = 'f'
+      meth.call(??, %w[FOO BAR BAZ]).must_equal 'FOO'
+      Inquirer::IOHelper.keys = 'B'
+      meth.call(??, %w[foo bar baz]).must_equal 'bar'
+    end
+
     it 'should return the default if there is a default and enter is pressed' do
       Inquirer::IOHelper.keys = "\r"
       meth.call('?', ['a','b', 'c'], default: 'c').must_equal 'c'
@@ -113,7 +120,7 @@ describe Inquirer::Prompts::Choice do
         Inquirer::IOHelper.output = ''
         Inquirer::IOHelper.keys = "\r"
         meth.call('?', ['[f]oo', 'b[A]r', '[B]az'], default: 'foo').must_equal 'foo'
-        Inquirer::IOHelper.output.must_equal "?: ([F]oo, b[A]r, [B]az)?: #{Term::ANSIColor.cyan('foo')}\n"
+        Inquirer::IOHelper.output.must_equal "?: ([F]oo, b[a]r, [b]az)?: #{Term::ANSIColor.cyan('foo')}\n"
       end
 
       it 'will not set a default if default is explicitly specified as false' do
