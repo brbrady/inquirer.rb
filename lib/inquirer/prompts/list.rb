@@ -58,7 +58,7 @@ class List
     @pos = 0
     @prompt = ""
     @renderer = renderer = ListDefault.new( Inquirer::Style::Default )
-    @responseRenderer = responseRenderer = ListResponseDefault.new()
+    @responseRenderer = responseRenderer || ListResponseDefault.new()
   end
 
   def update_prompt

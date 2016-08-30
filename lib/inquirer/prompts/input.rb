@@ -52,7 +52,7 @@ class Input
     @password = password
     @pos = 0
     @renderer = renderer || InputDefault.new( Inquirer::Style::Default )
-    @responseRenderer = responseRenderer = InputResponseDefault.new()
+    @responseRenderer = responseRenderer || InputResponseDefault.new()
   end
 
   def display_value

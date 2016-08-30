@@ -65,7 +65,7 @@ class Checkbox
     @active = default || elements.map{|i| false}
     @prompt = ""
     @renderer = renderer || CheckboxDefault.new( Inquirer::Style::Default )
-    @responseRenderer = responseRenderer = CheckboxResponseDefault.new()
+    @responseRenderer = responseRenderer || CheckboxResponseDefault.new()
   end
 
   def update_prompt
