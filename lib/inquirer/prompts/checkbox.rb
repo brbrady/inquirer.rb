@@ -74,7 +74,7 @@ module Inquirer::Prompts
       @active = default || elements.map{|i| false}
       @prompt = ""
       @renderer = renderer || CheckboxDefault.new( Inquirer::Style::Default )
-      @responseRenderer = responseRenderer = CheckboxResponseDefault.new()
+      @responseRenderer = responseRenderer || CheckboxResponseDefault.new()
       @return_values = values
     end
 

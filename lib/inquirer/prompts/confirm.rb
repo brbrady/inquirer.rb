@@ -58,7 +58,7 @@ module Inquirer::Prompts
       @default = default
       @prompt = ""
       @renderer = renderer || ConfirmDefault.new( Inquirer::Style::Default )
-      @responseRenderer = responseRenderer = ConfirmResponseDefault.new()
+    @responseRenderer = responseRenderer || ConfirmResponseDefault.new()
     end
 
     def update_prompt

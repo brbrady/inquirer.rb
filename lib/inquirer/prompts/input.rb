@@ -73,7 +73,7 @@ module Inquirer::Prompts
       @password = password
       @pos = 0
       @renderer = renderer || InputDefault.new( Inquirer::Style::Default )
-      @responseRenderer = responseRenderer = InputResponseDefault.new()
+      @responseRenderer = responseRenderer || InputResponseDefault.new()
       @validate = opts[:validate]
       @invalid_response = opts[:invalid_response]
     end
