@@ -114,11 +114,12 @@ module Inquirer::Prompts
 
     def print_invalid_response
       if @invalid_response
-        message = @invalid_response
+        message = @invalid_response % @value.inspect
       elsif @validate.is_a? Regexp
-        message = "Invalid answer (must match #{@validate.inspect})" 
+        message = "Invalid answer %s (must match %s)." % [
+          @value, @validate].map(&:inspect)
       else
-        message = "Invalid answer."
+        message = "Invalid answer %s." % @value.inspect
       end
       print_warning message
       Inquirer::IOHelper.render( update_prompt )
