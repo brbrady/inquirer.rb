@@ -24,6 +24,17 @@ module Inquirer::Prompts
         ( response.nil? ? "" : @response % response )
     end
 
+    def renderSloth heading = nil, choices = [], selection = nil, footer = nil
+      # render the heading
+      ( heading.nil? ? "" : @heading % heading ) +
+        # render the list
+
+        @options % choices.map{|choice, key|
+        render_sloth_item(choice, key, selection)}.join(', ') +
+        # render the footer
+        ( footer.nil? ? "" : @footer % footer )
+    end
+
     def warning message
       # render the warning
       @warning % message
@@ -34,6 +45,11 @@ module Inquirer::Prompts
       (default and choice.downcase == default.downcase)?
         choice.clone.sub(key, "[#{key.upcase}]") :
         choice.clone.sub(key, "[#{key.downcase}]")
+    end
+
+    def render_sloth_item choice, key, selection
+      c = choice.clone.sub(key, "[#{key.downcase}]")
+      (choice == selection) ? Term::ANSIColor.intense_cyan(c) : c
     end
   end
 
@@ -64,13 +80,15 @@ module Inquirer::Prompts
                    choices = nil,
                    default: nil,
                    renderer: nil,
-                   responseRenderer: nil)
+                   responseRenderer: nil,
+                  **opts)
       @question = question
       @default = default
+      @sloth_mode = opts[:sloth_mode]
       @value = ""
       @prompt = ""
       @renderer = renderer || ChoiceDefault.new( Inquirer::Style::Default )
-      @responseRenderer = responseRenderer = ChoiceResponseDefault.new()
+      @responseRenderer = responseRenderer || ChoiceResponseDefault.new()
       parse_choices(choices)
     end
 
@@ -79,6 +97,12 @@ module Inquirer::Prompts
       @prompt = @renderer.render(@question,
                                  @choices.map{|k,v|[v[0], k]},
                                  @default)
+    end
+
+    def update_sloth
+      @prompt = @renderer.renderSloth(@question,
+                                      @choices.map{|k,v|[v[0], k]},
+                                      @value)
     end
 
     def update_response
@@ -117,6 +141,12 @@ module Inquirer::Prompts
       end # choices.each do |choice, final|
     end
 
+    def sloth_mode
+      return false unless @sloth_mode
+      Inquirer::IOHelper.rerender( update_sloth ) if @value != ""
+      true
+    end
+
     # Run the choice selection, wait for the user to select an item and return
     # the selected index
     # Params:
@@ -139,18 +169,18 @@ module Inquirer::Prompts
           when /^[a-z]$/
             if @choices.include? raw
               @value, @final = @choices[raw]
-              false
+              sloth_mode
             elsif @choices.include? raw.upcase
               @value, @final = @choices[raw.upcase]
-              false
+              sloth_mode
             else
               print_warning "#{raw} is not in #{@choices.keys.join(', ')}"
               Inquirer::IOHelper.rerender( update_prompt )
               true
             end
           when "return"
-            if @default
-              @value = @default
+            if @default or @value != ""
+              @value = @default if @value == ""
               false
             else
               print_warning "No default value, please make a selection."

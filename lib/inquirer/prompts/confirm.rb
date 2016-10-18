@@ -13,7 +13,7 @@ module Inquirer::Prompts
       # render the heading
       ( heading.nil? ? "" : @heading % heading ) +
         # render the defaults
-        @default % options +
+        (@default % options ) +
         # render the footer
         ( footer.nil? ? "" : @footer % footer )
     end
@@ -23,6 +23,22 @@ module Inquirer::Prompts
       ( heading.nil? ? "" : @heading % heading ) +
         # render the footer
         ( response.nil? ? "" : @response % response )
+    end
+
+    def renderSloth heading = nil, response = nil, footer = nil
+      options = ['y','n']
+      if response == true
+        options[0] = Term::ANSIColor.intense_cyan('Y')
+      elsif response == false
+        options[1] = Term::ANSIColor.intense_cyan('N')
+      end
+
+      # render the heading
+      ( heading.nil? ? "" : @heading % heading ) +
+        # render the defaults
+        ( @default % options ) +
+        # render the footer
+        ( footer.nil? ? "" : @footer % footer )
     end
   end
 
@@ -57,8 +73,9 @@ module Inquirer::Prompts
       @value = ""
       @default = default
       @prompt = ""
+      @sloth_mode = opts[:sloth_mode]
       @renderer = renderer || ConfirmDefault.new( Inquirer::Style::Default )
-    @responseRenderer = responseRenderer || ConfirmResponseDefault.new()
+      @responseRenderer = responseRenderer || ConfirmResponseDefault.new()
     end
 
     def update_prompt
@@ -66,8 +83,18 @@ module Inquirer::Prompts
       @prompt = @renderer.render(@question, @default)
     end
 
+    def update_sloth
+      @prompt = @renderer.renderSloth(@question, @value)
+    end
+
     def update_response
       @prompt = @responseRenderer.renderResponse(@question, (@value)? 'Yes' : 'No')
+    end
+
+    def sloth_mode
+      return false unless @sloth_mode
+      Inquirer::IOHelper.rerender( update_sloth) if @value != ""
+      true
     end
 
     # Run the list selection, wait for the user to select an item and return
@@ -91,12 +118,12 @@ module Inquirer::Prompts
           case raw
           when "y","Y"
             @value = true
-            false
+            sloth_mode
           when "n","N"
             @value = false
-            false
+            sloth_mode
           when "return"
-            @value = @default
+            @value = @default if @value == ""
             false
           else
             true
