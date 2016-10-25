@@ -122,7 +122,8 @@ module Inquirer::Prompts
         overrides = choices.map{|k,|
           k.gsub(/\[(\w)\]/, '\1') if k =~ rx and $1 =~ /[A-Z]/
         }.compact
-        @default = overrides[0].downcase if overrides.count == 1
+        @default = overrides[0] if overrides.count == 1
+        @default.downcase! if @default and choices.is_a? Array
       end
       choices.each do |choice, final|
         if choice =~ rx
