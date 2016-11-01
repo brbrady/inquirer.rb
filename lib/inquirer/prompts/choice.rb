@@ -43,12 +43,12 @@ module Inquirer::Prompts
     private
     def render_item choice, key, default
       (default and choice.downcase == default.downcase)?
-        choice.clone.sub(key, "[#{key.upcase}]") :
-        choice.clone.sub(key, "[#{key.downcase}]")
+        choice.clone.downcase.sub(key, "[#{key.upcase}]") :
+        choice.clone.downcase.sub(key, "[#{key.downcase}]")
     end
 
     def render_sloth_item choice, key, selection
-      c = choice.clone.sub(key, "[#{key.downcase}]")
+      c = choice.clone.downcase.sub(key, "[#{key.downcase}]")
       (choice == selection) ? Term::ANSIColor.intense_cyan(c) : c
     end
   end
@@ -127,14 +127,14 @@ module Inquirer::Prompts
       end
       choices.each do |choice, final|
         if choice =~ rx
-          @choices[$1] = [choice.gsub(/\[(\w)\]/, '\1'), final]
+          @choices[$1.downcase] = [choice.gsub(/\[(\w)\]/, '\1'), final]
         else
           choice.split('').each_with_index do |char, i|
             if @choices.include? char or (excludes.include?(char) and not excludes[char] == choice)
               next unless i == choice.length - 1
               raise ArgumentError.new('No unique selection character available!')
             else
-              @choices[char] = [choice, final]
+              @choices[char.downcase] = [choice, final]
               break
             end # if @choices.include? char
           end # choice.split('').each_with_index do |char, i|
@@ -170,9 +170,6 @@ module Inquirer::Prompts
           when /^[a-z]$/
             if @choices.include? raw
               @value, @final = @choices[raw]
-              sloth_mode
-            elsif @choices.include? raw.upcase
-              @value, @final = @choices[raw.upcase]
               sloth_mode
             else
               print_warning "#{raw} is not in #{@choices.keys.join(', ')}"
