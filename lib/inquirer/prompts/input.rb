@@ -157,6 +157,8 @@ module Inquirer::Prompts
             @pos = @pos - 1
             print Inquirer::IOHelper.char_right
           end
+        when "ctrl-c"
+          raise Interrupt
         when /^ctrl-([aekuw])$/
           ctrl $1.to_sym
           Inquirer::IOHelper.rerender( update_prompt )
