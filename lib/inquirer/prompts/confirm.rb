@@ -70,7 +70,7 @@ module Inquirer::Prompts
                    responseRenderer: nil,
                    **opts)
       @question = question
-      @value = ""
+      @value = nil
       @default = default
       @prompt = ""
       @sloth_mode = opts[:sloth_mode]
@@ -93,7 +93,7 @@ module Inquirer::Prompts
 
     def sloth_mode
       return false unless @sloth_mode
-      Inquirer::IOHelper.rerender( update_sloth) if @value != ""
+      Inquirer::IOHelper.rerender( update_sloth) unless @value.nil?
       true
     end
 
@@ -123,8 +123,8 @@ module Inquirer::Prompts
             @value = false
             sloth_mode
           when "return"
-            @value = @default if @value == ""
-            false
+            @value = @default if @value.nil? and not @default.nil?
+            @value.nil?
           else
             true
           end
