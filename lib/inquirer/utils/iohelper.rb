@@ -16,6 +16,7 @@ module Inquirer::IOHelper
     "\e[C" => "right",
     "\e[D" => "left",
     "\177" => "backspace",
+    "\e[3~" => "delete",
     # ctrl + c    cancel
     "\003" => "ctrl-c",
     # ctrl + d    exit
@@ -38,34 +39,20 @@ module Inquirer::IOHelper
     "\v" => "ctrl-k"
   }
 
-  # Read a character the user enters on console. This call is synchronous blocking.
-  # This is taken from: http://www.alecjacobson.com/weblog/?p=75
   def read_char
-    begin
-      # save previous state of stty
-      old_state = `stty -g`
-      # disable echoing and enable raw (not having to press enter)
-      system "stty raw -echo"
-      c = STDIN.getc.chr
-      # gather next two characters of special keys
-      if(c=="\e")
-        extra_thread = Thread.new{
-          c = c + STDIN.getc.chr
-          c = c + STDIN.getc.chr
-        }
-        # wait just long enough for special keys to get swallowed
-        extra_thread.join(0.00001)
-        # kill thread so not-so-long special keys don't wait on getc
-        extra_thread.kill
-      end
-    rescue => ex
-      puts "#{ex.class}: #{ex.message}"
-      puts ex.backtrace
-    ensure
-      # restore previous state of stty
-      system "stty #{old_state}"
+    STDIN.echo = false
+    STDIN.raw!
+
+    input = STDIN.getc.chr
+    if input == "\e" then
+      input << STDIN.read_nonblock(3) rescue nil
+      input << STDIN.read_nonblock(2) rescue nil
     end
-    return c
+  ensure
+    STDIN.echo = true
+    STDIN.cooked!
+
+    return input
   end
 
   # Read a keypress on console. Return the key name (e.g. "space", "a", "B")

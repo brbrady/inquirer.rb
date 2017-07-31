@@ -141,20 +141,28 @@ module Inquirer::Prompts
       # Inquirer::IOHelper.read_char
       Inquirer::IOHelper.read_key_while true do |key|
         raw  = Inquirer::IOHelper.char_to_raw(key)
-
         case raw
         when "backspace"
-          @value = @value.chop
-          Inquirer::IOHelper.rerender( update_prompt )
-          update_cursor
+          if @pos < @value.length
+            @value.slice!(@value.length - (@pos + 1))
+            Inquirer::IOHelper.rerender( update_prompt )
+            update_cursor
+          end
+        when "delete"
+          if @pos > 0
+            @value.slice!(@value.length - @pos)
+            @pos -= 1
+            Inquirer::IOHelper.rerender( update_prompt )
+            update_cursor
+          end
         when "left"
           if @pos < @value.length
-            @pos = @pos + 1
+            @pos += 1
             print Inquirer::IOHelper.char_left
           end
         when "right"
           if @pos > 0
-            @pos = @pos - 1
+            @pos -= 1
             print Inquirer::IOHelper.char_right
           end
         when "ctrl-c"

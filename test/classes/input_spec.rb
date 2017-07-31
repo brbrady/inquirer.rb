@@ -27,5 +27,26 @@ describe Inquirer::Prompts::Input do
       Inquirer::IOHelper.frames[-2].must_equal "please type password: ***********"
       Inquirer::IOHelper.output.must_equal "please type password: \e[36m\e[0m\n"
     end
+
+    it "shouldn't get messed up when you move around" do
+      Inquirer::IOHelper.keys = ['i','n','p','u','t',(['left']*5),'t','y','p','e','d',' ',"\r"].flatten
+      meth.call("please type input")
+      Inquirer::IOHelper.frames[-2].must_equal "please type input: typed input"
+      Inquirer::IOHelper.output.must_equal "please type input: \e[36mtyped input\e[0m\n"
+    end
+
+    it "should delete the character at the specified position" do
+      Inquirer::IOHelper.keys = ['t','y','u','p','e','d',' ','i','n','p','u','t',['left']*9,'backspace',"\r"].flatten
+      meth.call("please type input")
+      Inquirer::IOHelper.frames[-2].must_equal "please type input: typed input"
+      Inquirer::IOHelper.output.must_equal "please type input: \e[36mtyped input\e[0m\n"
+    end
+
+    it "should delete the character at the specified position" do
+      Inquirer::IOHelper.keys = ['t','y','u','p','e','d',' ','i','n','p','u','t',['left']*10,'delete',"\r"].flatten
+      meth.call("please type input")
+      Inquirer::IOHelper.frames[-2].must_equal "please type input: typed input"
+      Inquirer::IOHelper.output.must_equal "please type input: \e[36mtyped input\e[0m\n"
+    end
   end
 end
